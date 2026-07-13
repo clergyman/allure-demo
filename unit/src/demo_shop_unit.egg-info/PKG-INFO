@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: demo-shop-unit
+Version: 0.1.0
+Summary: Small Python package used for unit test demos.
+Requires-Python: >=3.11
+Provides-Extra: test
+Requires-Dist: pytest>=8.0; extra == "test"

@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+src/demo_shop/__init__.py
+src/demo_shop/catalog/__init__.py
+src/demo_shop/catalog/pricing.py
+src/demo_shop/checkout/__init__.py
+src/demo_shop/checkout/cart.py
+src/demo_shop/users/__init__.py
+src/demo_shop/users/permissions.py
+src/demo_shop_unit.egg-info/PKG-INFO
+src/demo_shop_unit.egg-info/SOURCES.txt
+src/demo_shop_unit.egg-info/dependency_links.txt
+src/demo_shop_unit.egg-info/requires.txt
+src/demo_shop_unit.egg-info/top_level.txt
