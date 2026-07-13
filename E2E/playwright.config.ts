@@ -2,9 +2,10 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
+  outputDir: 'test-results',
   reporter: 'html',
   use: {
-    trace: 'on-first-retry',
+    trace: 'on',
   },
   projects: [
     {
@@ -21,4 +22,3 @@ export default defineConfig({
     },
   ],
 });
-

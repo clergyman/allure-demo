@@ -20,3 +20,6 @@ py-modules = []
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["tests"]
+log_file = "api-test.log"
+log_file_level = "INFO"
+log_file_format = "%(asctime)s %(levelname)s %(name)s %(message)s"

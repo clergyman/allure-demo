@@ -24,6 +24,15 @@ npx playwright install
 npx playwright test
 ```
 
+## Playwright traces
+
+Traces are captured for every test run and stored under `test-results`.
+Open the HTML report to inspect them:
+
+```bash
+npx playwright show-report
+```
+
 ## Run tests in one browser
 
 ```bash

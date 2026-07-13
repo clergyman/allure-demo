@@ -31,6 +31,20 @@ On Windows PowerShell, activate the virtual environment with:
 python3 -m pytest
 ```
 
+## API request logging
+
+API tests write simulated request logs to `api-test.log`:
+
+```bash
+python3 -m pytest
+```
+
+To also stream API logs in the terminal:
+
+```bash
+python3 -m pytest -o log_cli=true --log-cli-level=INFO
+```
+
 ## Run tests for one microservice
 
 ```bash
