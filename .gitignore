@@ -1,9 +1,15 @@
 .venv/
+.DS_Store
+*.zip
+history.jsonl
 __pycache__/
 *.py[cod]
 .pytest_cache/
+*.egg-info/
 node_modules/
 playwright-report/
 test-results/
+allure-report/
+allure-results/
 api-test.log
 dist/

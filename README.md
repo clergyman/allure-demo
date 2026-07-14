@@ -18,7 +18,8 @@ E2E/   Playwright browser tests organized by user journey
 
 ## Quick start
 
-Open one folder at a time and follow its README.
+Each folder has copy-paste setup commands in its README. Python dependencies are
+listed in `requirements.txt` files inside `unit/` and `API/`; install them into
+local virtual environments instead of your system Python.
 
 Each folder is intentionally independent so it can later run as a separate CI job or matrix job.
-

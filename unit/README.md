@@ -7,29 +7,34 @@ The code lives in `src/demo_shop`. The tests live in `tests`.
 ## What you need
 
 - Python 3.11 or newer
-- pytest
 
-## Install
-
-From this folder:
+## Copy-paste from repo root
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -e ".[test]"
+python3 -m venv unit/.venv
+unit/.venv/bin/python3 -m pip install -r unit/requirements.txt
+unit/.venv/bin/python3 -m pytest unit
 ```
 
-On Windows PowerShell, activate the virtual environment with:
+## Copy-paste from this folder
+
+If your terminal is already inside `unit`:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python3 -m pip install -r requirements.txt
+.venv/bin/python3 -m pytest
+```
+
+On Windows PowerShell from inside `unit`:
 
 ```powershell
-.venv\Scripts\Activate.ps1
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+.venv\Scripts\python.exe -m pytest
 ```
 
-## Run the tests
-
-```bash
-python3 -m pytest
-```
+Dependencies are listed in `requirements.txt`.
 
 ## What the tests cover
 
