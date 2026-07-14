@@ -7,28 +7,58 @@ There is no real server in this demo yet. The tests use tiny fake clients so the
 ## What you need
 
 - Python 3.11 or newer
-- pytest
 
-## Install
+## Setup
+
+From the repository root:
+
+```bash
+python3 -m venv API/.venv
+API/.venv/bin/python3 -m pip install -r API/requirements.txt
+```
 
 From this folder:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -e ".[test]"
+python3 -m venv .venv
+.venv/bin/python3 -m pip install -r requirements.txt
 ```
 
-On Windows PowerShell, activate the virtual environment with:
+On Windows PowerShell from inside `API`:
 
 ```powershell
-.venv\Scripts\Activate.ps1
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+$env:DEMO_DISABLE_FLAKES = "1"
+.venv\Scripts\python.exe -m pytest
 ```
 
-## Run all API tests
+## Run With Pytest
+
+From this folder:
 
 ```bash
-python3 -m pytest
+DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest
+```
+
+From the repository root:
+
+```bash
+DEMO_DISABLE_FLAKES=1 API/.venv/bin/python3 -m pytest API
+```
+
+## Run With Allure
+
+From this folder:
+
+```bash
+DEMO_DISABLE_FLAKES=1 npx allure run -- .venv/bin/python3 -m pytest --alluredir allure-results
+```
+
+From the repository root:
+
+```bash
+DEMO_DISABLE_FLAKES=1 npx allure run -- API/.venv/bin/python3 -m pytest API --alluredir API/allure-results
 ```
 
 ## API request logging
@@ -36,21 +66,21 @@ python3 -m pytest
 API tests write simulated request logs to `api-test.log`:
 
 ```bash
-python3 -m pytest
+DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest
 ```
 
 To also stream API logs in the terminal:
 
 ```bash
-python3 -m pytest -o log_cli=true --log-cli-level=INFO
+DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest -o log_cli=true --log-cli-level=INFO
 ```
 
 ## Run tests for one microservice
 
 ```bash
-pytest tests/microservices/identity
-pytest tests/microservices/catalog
-pytest tests/microservices/orders
+DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest tests/microservices/identity
+DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest tests/microservices/catalog
+DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest tests/microservices/orders
 ```
 
 ## Demo volume and flakes
@@ -58,11 +88,21 @@ pytest tests/microservices/orders
 The suite collects 200 tests. The volume tests include rare demo flakes with a
 0.1% per-test probability to make reports show occasional unstable API behavior.
 
-For a deterministic verification run, disable the demo flakes:
+For deterministic runs, the commands above set `DEMO_DISABLE_FLAKES=1`.
+
+To force visible flaky failures for a demo, set a higher probability:
 
 ```bash
-DEMO_DISABLE_FLAKES=1 python3 -m pytest
+DEMO_FLAKE_PROBABILITY=0.25 .venv/bin/python3 -m pytest tests/microservices/orders/test_create_order_volume.py
 ```
+
+From the repository root:
+
+```bash
+DEMO_FLAKE_PROBABILITY=0.25 API/.venv/bin/python3 -m pytest API/tests/microservices/orders/test_create_order_volume.py
+```
+
+Dependencies are listed in `requirements.txt`.
 
 ## Why the tests are grouped this way
 
