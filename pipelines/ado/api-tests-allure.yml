@@ -1,0 +1,78 @@
+name: api-tests-allure-report-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - API/*
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  pythonVersion: "3.12"
+  nodeVersion: "20.x"
+
+steps:
+  - checkout: self
+    clean: true
+
+  - task: UsePythonVersion@0
+    displayName: Use Python $(pythonVersion)
+    inputs:
+      versionSpec: $(pythonVersion)
+
+  - task: NodeTool@0
+    displayName: Use Node.js $(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - script: |
+      npm install --global allure
+    displayName: Install Allure Report CLI
+
+  - script: |
+      python -m venv .venv
+      .venv/bin/python3 -m pip install --upgrade pip
+      .venv/bin/python3 -m pip install -r requirements.txt
+    displayName: Install API test dependencies
+    workingDirectory: API
+
+  - script: |
+      npx allure run -- .venv/bin/python3 -m pytest --alluredir allure-results
+    displayName: Run API tests with Allure Report
+    workingDirectory: API
+
+  - script: |
+      mkdir -p allure-results
+      touch api-test.log
+    displayName: Ensure API test artifacts exist
+    condition: always()
+    workingDirectory: API
+
+  - task: PublishAllureReport@2
+    displayName: Publish API Allure Report
+    condition: always()
+    inputs:
+      testResultsDir: API/allure-results
+      reportName: API Tests Allure Report
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish raw Allure result files
+    condition: always()
+    inputs:
+      targetPath: API/allure-results
+      artifact: api-allure-results
+      publishLocation: pipeline
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish API test log
+    condition: always()
+    inputs:
+      targetPath: API/api-test.log
+      artifact: api-test-log
+      publishLocation: pipeline
