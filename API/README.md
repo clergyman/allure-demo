@@ -52,13 +52,13 @@ DEMO_DISABLE_FLAKES=1 API/.venv/bin/python3 -m pytest API
 From this folder:
 
 ```bash
-DEMO_DISABLE_FLAKES=1 npx allure run -- .venv/bin/python3 -m pytest --alluredir allure-results
+DEMO_DISABLE_FLAKES=1 npx allure run --config ./allurerc.mjs -- .venv/bin/python3 -m pytest --alluredir allure-results
 ```
 
 From the repository root:
 
 ```bash
-DEMO_DISABLE_FLAKES=1 npx allure run -- API/.venv/bin/python3 -m pytest API --alluredir API/allure-results
+DEMO_DISABLE_FLAKES=1 npx allure run --config API/allurerc.mjs -- API/.venv/bin/python3 -m pytest API --alluredir API/allure-results
 ```
 
 ## API request logging

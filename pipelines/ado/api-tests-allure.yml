@@ -43,12 +43,13 @@ steps:
     workingDirectory: API
 
   - script: |
-      npx allure run -- .venv/bin/python3 -m pytest --alluredir allure-results
+      npx allure run --config ./allurerc.mjs -- .venv/bin/python3 -m pytest --alluredir allure-results
     displayName: Run API tests with Allure Report
     workingDirectory: API
 
   - script: |
       mkdir -p allure-results
+      mkdir -p allure-report
       touch api-test.log
     displayName: Ensure API test artifacts exist
     condition: always()
@@ -58,7 +59,7 @@ steps:
     displayName: Publish API Allure Report
     condition: always()
     inputs:
-      testResultsDir: API/allure-results
+      reportDir: API/allure-report
       reportName: API Tests Allure Report
 
   - task: PublishPipelineArtifact@1
