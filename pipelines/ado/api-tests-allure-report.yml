@@ -1,3 +1,5 @@
+name: api-tests-allure-report-$(Date:yyyyMMdd)$(Rev:.r)
+
 trigger:
   branches:
     include:
@@ -31,7 +33,7 @@ steps:
 
   - script: |
       npm install --global allure
-    displayName: Install Allure CLI
+    displayName: Install Allure Report CLI
 
   - script: |
       python -m venv .venv
@@ -42,7 +44,7 @@ steps:
 
   - script: |
       npx allure run -- .venv/bin/python3 -m pytest --alluredir allure-results
-    displayName: Run API tests with Allure
+    displayName: Run API tests with Allure Report
     workingDirectory: API
 
   - script: |
@@ -52,8 +54,15 @@ steps:
     condition: always()
     workingDirectory: API
 
+  - task: PublishAllureReport@2
+    displayName: Publish API Allure Report
+    condition: always()
+    inputs:
+      testResultsDir: API/allure-results
+      reportName: API Tests Allure Report
+
   - task: PublishPipelineArtifact@1
-    displayName: Publish Allure results
+    displayName: Publish raw Allure result files
     condition: always()
     inputs:
       targetPath: API/allure-results
