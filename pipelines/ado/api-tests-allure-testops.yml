@@ -48,7 +48,7 @@ steps:
     workingDirectory: API
     env:
       CI: "true"
-      DEMO_DISABLE_FLAKES: "1"
+      DEMO_DISABLE_FLAKES: "0"
       TESTOPS_URL: $(TESTOPS_URL)
       TESTOPS_TOKEN: $(TESTOPS_TOKEN)
       TESTOPS_PROJECT_ID: $(TESTOPS_PROJECT_ID)
