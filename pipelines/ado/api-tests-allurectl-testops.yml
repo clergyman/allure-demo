@@ -33,7 +33,7 @@ steps:
     workingDirectory: API
 
   - script: |
-      .allurectl watch -- .venv/bin/python3 -m pytest --alluredir allure-results
+      ./allurectl watch -- .venv/bin/python3 -m pytest --alluredir allure-results
     displayName: Run pytest API tests and upload to Allure TestOps
     workingDirectory: API
     env:
@@ -43,5 +43,4 @@ steps:
       ALLURE_PROJECT_ID: $(ALLURE_PROJECT_ID)
       ALLURE_RESULTS: allure-results
       ALLURE_LAUNCH_NAME: "API Tests Azure DevOps pytest"
-
 
