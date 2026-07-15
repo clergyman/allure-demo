@@ -37,34 +37,11 @@ steps:
     displayName: Run pytest API tests and upload to Allure TestOps
     workingDirectory: API
     env:
-      CI: "true"
-      DEMO_DISABLE_FLAKES: "1"
+      DEMO_DISABLE_FLAKES: "0"
       ALLURE_ENDPOINT: $(ALLURE_ENDPOINT)
       ALLURE_TOKEN: $(ALLURE_TOKEN)
       ALLURE_PROJECT_ID: $(ALLURE_PROJECT_ID)
       ALLURE_RESULTS: allure-results
       ALLURE_LAUNCH_NAME: "API Tests Azure DevOps pytest"
-      ALLURE_LAUNCH_TAGS: "api,demo-shop"
 
-  - script: |
-      mkdir -p allure-results
-      touch api-test.log
-    displayName: Ensure API test artifacts exist
-    condition: always()
-    workingDirectory: API
 
-  - task: PublishPipelineArtifact@1
-    displayName: Publish raw Allure result files
-    condition: always()
-    inputs:
-      targetPath: API/allure-results
-      artifact: api-allurectl-results
-      publishLocation: pipeline
-
-  - task: PublishPipelineArtifact@1
-    displayName: Publish API test log
-    condition: always()
-    inputs:
-      targetPath: API/api-test.log
-      artifact: api-allurectl-test-log
-      publishLocation: pipeline
