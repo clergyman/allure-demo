@@ -43,7 +43,8 @@ steps:
     workingDirectory: API
 
   - script: |
-      npx allure run --config ./allurerc.testops.mjs -- .venv/bin/python3 -m pytest --alluredir allure-results
+      # npx allure run --config ./allurerc.testops.mjs -- .venv/bin/python3 -m pytest --alluredir allure-results
+      ./allurectl watch -- .venv/bin/python3 -m pytest --alluredir allure-results || true
     displayName: Run API tests and upload to Allure TestOps
     workingDirectory: API
     env:
@@ -53,6 +54,13 @@ steps:
       TESTOPS_TOKEN: $(TESTOPS_TOKEN)
       TESTOPS_PROJECT_ID: $(TESTOPS_PROJECT_ID)
       TESTOPS_LAUNCH_NAME: $(TESTOPS_LAUNCH_NAME)
+      # 
+      ALLURE_ENDPOINT: $(TESTOPS_URL)
+      ALLURE_TOKEN: $(TESTOPS_TOKEN)
+      ALLURE_PROJECT_ID: TESTOPS_PROJECT_ID
+      ALLURE_RESULTS: "allure-results"
+      ALLURE_LAUNCH_NAME: "$(TESTOPS_LAUNCH_NAME) Azure DevOps Playwright"
+
 
   - script: |
       mkdir -p allure-results
