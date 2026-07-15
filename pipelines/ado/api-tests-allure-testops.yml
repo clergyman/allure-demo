@@ -1,0 +1,78 @@
+name: api-tests-allure-testops-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - API/*
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  pythonVersion: "3.12"
+  nodeVersion: "20.x"
+
+steps:
+  - checkout: self
+    clean: true
+
+  - task: UsePythonVersion@0
+    displayName: Use Python $(pythonVersion)
+    inputs:
+      versionSpec: $(pythonVersion)
+
+  - task: NodeTool@0
+    displayName: Use Node.js $(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - script: |
+      npm install --global allure @allurereport/plugin-testops
+    displayName: Install Allure TestOps CLI dependencies
+
+  - script: |
+      python -m venv .venv
+      .venv/bin/python3 -m pip install --upgrade pip
+      .venv/bin/python3 -m pip install -r requirements.txt
+    displayName: Install API test dependencies
+    workingDirectory: API
+
+  - script: |
+      npx allure run --config ./allurerc.testops.mjs -- .venv/bin/python3 -m pytest --alluredir allure-results
+    displayName: Run API tests and upload to Allure TestOps
+    workingDirectory: API
+    env:
+      CI: "true"
+      DEMO_DISABLE_FLAKES: "1"
+      TESTOPS_URL: $(TESTOPS_URL)
+      TESTOPS_TOKEN: $(TESTOPS_TOKEN)
+      TESTOPS_PROJECT_ID: $(TESTOPS_PROJECT_ID)
+      TESTOPS_LAUNCH_NAME: $(TESTOPS_LAUNCH_NAME)
+
+  - script: |
+      mkdir -p allure-results
+      touch api-test.log
+    displayName: Ensure API test artifacts exist
+    condition: always()
+    workingDirectory: API
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish raw Allure result files
+    condition: always()
+    inputs:
+      targetPath: API/allure-results
+      artifact: api-allure-testops-results
+      publishLocation: pipeline
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish API test log
+    condition: always()
+    inputs:
+      targetPath: API/api-test.log
+      artifact: api-testops-test-log
+      publishLocation: pipeline

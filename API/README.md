@@ -61,6 +61,20 @@ From the repository root:
 DEMO_DISABLE_FLAKES=1 npx allure run --config API/allurerc.mjs -- API/.venv/bin/python3 -m pytest API --alluredir API/allure-results
 ```
 
+## Run With Allure TestOps
+
+From this folder:
+
+```bash
+export CI=true
+export TESTOPS_URL=https://your-testops-host
+export TESTOPS_TOKEN=your-token
+export TESTOPS_PROJECT_ID=1
+export DEMO_DISABLE_FLAKES=1
+
+npx allure run --config ./allurerc.testops.mjs -- .venv/bin/python3 -m pytest --alluredir allure-results
+```
+
 ## API request logging
 
 API tests write simulated request logs to `api-test.log`:
