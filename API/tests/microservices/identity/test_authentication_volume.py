@@ -20,10 +20,10 @@ LOGIN_CASES = [
 ]
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Identity Service")
+@allure.epic("Demo Shop")
+@allure.feature("Identity")
 @allure.story("Authentication volume")
-@allure.severity(allure.severity_level.NORMAL)
+@allure.severity("normal")
 @allure.label("layer", "api")
 @allure.label("component", "identity-service")
 @pytest.mark.parametrize(

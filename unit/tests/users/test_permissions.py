@@ -3,6 +3,7 @@ import allure
 from demo_shop.users.permissions import can
 
 pytestmark = [
+    allure.feature("Identity"),
     allure.label("component", "user-permissions"),
 ]
 

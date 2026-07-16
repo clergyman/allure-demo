@@ -6,6 +6,7 @@ import pytest
 from demo_shop.checkout.cart import Cart, CartItem
 
 pytestmark = [
+    allure.feature("Orders"),
     allure.label("component", "checkout-cart"),
 ]
 

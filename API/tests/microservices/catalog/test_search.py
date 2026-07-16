@@ -2,10 +2,10 @@ import allure
 import pytest
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Catalog Service")
+@allure.epic("Demo Shop")
+@allure.feature("Catalog")
 @allure.story("Product search")
-@allure.severity(allure.severity_level.CRITICAL)
+@allure.severity("critical")
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
 @allure.tag("smoke")
@@ -20,10 +20,10 @@ def test_search_finds_matching_product(catalog_client):
         )
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Catalog Service")
+@allure.epic("Demo Shop")
+@allure.feature("Catalog")
 @allure.story("Product search")
-@allure.severity(allure.severity_level.NORMAL)
+@allure.severity("normal")
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
 def test_search_returns_empty_list_when_nothing_matches(catalog_client):

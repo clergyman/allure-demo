@@ -4,6 +4,7 @@ import pytest
 from demo_shop.users.permissions import ROLE_PERMISSIONS, can
 
 pytestmark = [
+    allure.feature("Identity"),
     allure.label("component", "user-permissions"),
 ]
 

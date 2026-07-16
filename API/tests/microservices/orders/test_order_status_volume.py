@@ -15,10 +15,10 @@ ORDER_STATUS_CASES = [
 ]
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Orders Service")
+@allure.epic("Demo Shop")
+@allure.feature("Orders")
 @allure.story("Order status volume")
-@allure.severity(allure.severity_level.NORMAL)
+@allure.severity("normal")
 @allure.label("layer", "api")
 @allure.label("component", "orders-service")
 @pytest.mark.parametrize(("case_id", "order_id", "expected_status"), ORDER_STATUS_CASES)

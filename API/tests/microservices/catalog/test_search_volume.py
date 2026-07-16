@@ -21,10 +21,10 @@ SEARCH_CASES = [
 ]
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Catalog Service")
+@allure.epic("Demo Shop")
+@allure.feature("Catalog")
 @allure.story("Product search volume")
-@allure.severity(allure.severity_level.NORMAL)
+@allure.severity("normal")
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
 @pytest.mark.parametrize(("case_id", "query", "expected_count"), SEARCH_CASES)

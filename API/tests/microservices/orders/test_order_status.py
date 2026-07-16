@@ -1,10 +1,10 @@
 import allure
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Orders Service")
+@allure.epic("Demo Shop")
+@allure.feature("Orders")
 @allure.story("Order status")
-@allure.severity(allure.severity_level.CRITICAL)
+@allure.severity("critical")
 @allure.label("layer", "api")
 @allure.label("component", "orders-service")
 @allure.tag("smoke")
@@ -17,10 +17,10 @@ def test_get_order_returns_status(orders_client):
         assert response["json"]["status"] == "created"
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Orders Service")
+@allure.epic("Demo Shop")
+@allure.feature("Orders")
 @allure.story("Order status")
-@allure.severity(allure.severity_level.NORMAL)
+@allure.severity("normal")
 @allure.label("layer", "api")
 @allure.label("component", "orders-service")
 def test_get_order_returns_not_found_for_unknown_order(orders_client):

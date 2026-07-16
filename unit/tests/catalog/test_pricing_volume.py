@@ -6,6 +6,7 @@ import pytest
 from demo_shop.catalog.pricing import apply_discount, price_with_tax
 
 pytestmark = [
+    allure.feature("Catalog"),
     allure.label("component", "catalog-pricing"),
 ]
 

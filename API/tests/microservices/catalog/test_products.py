@@ -2,10 +2,10 @@ import allure
 import pytest
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Catalog Service")
+@allure.epic("Demo Shop")
+@allure.feature("Catalog")
 @allure.story("Product details")
-@allure.severity(allure.severity_level.CRITICAL)
+@allure.severity("critical")
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
 @allure.tag("smoke")
@@ -21,10 +21,10 @@ def test_get_product_returns_product_details(catalog_client):
         )
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Catalog Service")
+@allure.epic("Demo Shop")
+@allure.feature("Catalog")
 @allure.story("Product details")
-@allure.severity(allure.severity_level.NORMAL)
+@allure.severity("normal")
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
 def test_get_product_returns_not_found_for_unknown_product(catalog_client):

@@ -11,6 +11,7 @@ test('guest opens the sign in form', async ({ page }) => {
     story: 'Guest session entry',
     severity: 'trivial',
   });
+  await allure.issue('28', 'epic');
 
   const loginPage = new LoginPage(page);
 
@@ -31,6 +32,7 @@ test('returning buyer sees the session banner', async ({ page, users }) => {
     story: 'Returning buyer session',
     severity: 'normal',
   });
+  await allure.issue('29', 'epic');
 
   const loginPage = new LoginPage(page);
 
@@ -55,6 +57,7 @@ test('password retry recovers after a typo', async ({ page, users }) => {
     story: 'Password retry',
     severity: 'minor',
   });
+  await allure.issue('30', 'epic');
 
   const loginPage = new LoginPage(page);
 

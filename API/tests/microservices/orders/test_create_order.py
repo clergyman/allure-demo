@@ -1,10 +1,10 @@
 import allure
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Orders Service")
+@allure.epic("Demo Shop")
+@allure.feature("Orders")
 @allure.story("Order creation")
-@allure.severity(allure.severity_level.BLOCKER)
+@allure.severity("blocker")
 @allure.label("layer", "api")
 @allure.label("component", "orders-service")
 @allure.tag("smoke")
@@ -21,10 +21,10 @@ def test_create_order_returns_created_order(orders_client):
         assert response["json"]["status"] == "created"
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Orders Service")
+@allure.epic("Demo Shop")
+@allure.feature("Orders")
 @allure.story("Order creation")
-@allure.severity(allure.severity_level.CRITICAL)
+@allure.severity("critical")
 @allure.label("layer", "api")
 @allure.label("component", "orders-service")
 def test_create_order_rejects_zero_quantity(orders_client):

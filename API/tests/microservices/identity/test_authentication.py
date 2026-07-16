@@ -1,10 +1,10 @@
 import allure
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Identity Service")
+@allure.epic("Demo Shop")
+@allure.feature("Identity")
 @allure.story("Authentication")
-@allure.severity(allure.severity_level.BLOCKER)
+@allure.severity("blocker")
 @allure.label("layer", "api")
 @allure.label("component", "identity-service")
 @allure.tag("smoke")
@@ -17,10 +17,10 @@ def test_login_returns_token_for_valid_user(identity_client):
         assert response["json"]["token"] == "demo-token"
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Identity Service")
+@allure.epic("Demo Shop")
+@allure.feature("Identity")
 @allure.story("Authentication")
-@allure.severity(allure.severity_level.CRITICAL)
+@allure.severity("critical")
 @allure.label("layer", "api")
 @allure.label("component", "identity-service")
 def test_login_rejects_wrong_password(identity_client):

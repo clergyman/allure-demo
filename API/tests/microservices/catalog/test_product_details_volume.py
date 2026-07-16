@@ -20,10 +20,10 @@ PRODUCT_CASES = [
 ]
 
 
-@allure.epic("Demo Shop API")
-@allure.feature("Catalog Service")
+@allure.epic("Demo Shop")
+@allure.feature("Catalog")
 @allure.story("Product detail volume")
-@allure.severity(allure.severity_level.NORMAL)
+@allure.severity("normal")
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
 @pytest.mark.parametrize(("case_id", "product_id", "expected_status"), PRODUCT_CASES)
