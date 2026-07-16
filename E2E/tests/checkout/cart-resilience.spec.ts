@@ -7,7 +7,7 @@ import { annotateScenario, attachScreenshot } from '../metadata';
 
 test('cart keeps the item before checkout @smoke', async ({ page }) => {
   await annotateScenario({
-    feature: 'Checkout',
+    feature: 'Orders',
     story: 'Cart state before checkout',
     severity: 'blocker',
     smoke: true,
@@ -29,7 +29,7 @@ test('cart keeps the item before checkout @smoke', async ({ page }) => {
 
 test('checkout handoff preserves cart status after stock check', async ({ page }) => {
   await annotateScenario({
-    feature: 'Checkout',
+    feature: 'Orders',
     story: 'Stock check handoff',
     severity: 'normal',
   });

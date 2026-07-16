@@ -17,7 +17,7 @@ export function annotateScenario({
   smoke = false,
 }: ScenarioMetadata) {
   return test.step('Record Allure scenario metadata', async () => {
-    await allure.epic('Demo Shop E2E');
+    await allure.epic('Demo Shop');
     await allure.feature(feature);
     await allure.story(story);
     await allure.layer('e2e');

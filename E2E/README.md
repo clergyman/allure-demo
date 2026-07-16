@@ -45,3 +45,11 @@ export ALLURE_LAUNCH_NAME="E2E Tests local Playwright"
 
 ./allurectl watch -- npx playwright test
 ```
+
+## Open Local Results
+
+```bash
+npx playwright show-report
+npx playwright show-trace test-results/path-to-test/trace.zip
+npx allure open allure-report
+```

@@ -6,7 +6,7 @@ import { annotateScenario, attachScreenshot } from '../metadata';
 
 test('buyer adds backpack to the cart @smoke', async ({ page }) => {
   await annotateScenario({
-    feature: 'Cart',
+    feature: 'Orders',
     story: 'Add product to cart',
     severity: 'blocker',
     smoke: true,
@@ -38,7 +38,7 @@ test('buyer adds backpack to the cart @smoke', async ({ page }) => {
 
 test('cart preview total matches checkout handoff', async ({ page }) => {
   await annotateScenario({
-    feature: 'Cart',
+    feature: 'Orders',
     story: 'Checkout preview handoff',
     severity: 'critical',
   });

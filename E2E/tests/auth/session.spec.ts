@@ -7,7 +7,7 @@ import { annotateScenario, attachScreenshot } from '../metadata';
 
 test('guest opens the sign in form', async ({ page }) => {
   await annotateScenario({
-    feature: 'Authentication',
+    feature: 'Identity',
     story: 'Guest session entry',
     severity: 'trivial',
   });
@@ -27,7 +27,7 @@ test('guest opens the sign in form', async ({ page }) => {
 
 test('returning buyer sees the session banner', async ({ page, users }) => {
   await annotateScenario({
-    feature: 'Authentication',
+    feature: 'Identity',
     story: 'Returning buyer session',
     severity: 'normal',
   });
@@ -51,7 +51,7 @@ test('returning buyer sees the session banner', async ({ page, users }) => {
 
 test('password retry recovers after a typo', async ({ page, users }) => {
   await annotateScenario({
-    feature: 'Authentication',
+    feature: 'Identity',
     story: 'Password retry',
     severity: 'minor',
   });

@@ -6,7 +6,7 @@ import { annotateScenario, attachScreenshot } from '../metadata';
 
 test('buyer signs in with valid credentials @smoke', async ({ page, users }) => {
   await annotateScenario({
-    feature: 'Authentication',
+    feature: 'Identity',
     story: 'Buyer sign in',
     severity: 'blocker',
     smoke: true,
