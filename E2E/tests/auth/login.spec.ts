@@ -9,8 +9,9 @@ test('buyer signs in with valid credentials @smoke', async ({ page, users }) => 
     feature: 'Identity',
     story: 'Buyer sign in',
     severity: 'blocker',
-    smoke: true,
+    smoke: true
   });
+  allure.label('work_item', '27');
   await allure.issue('27', 'epic');
   await allure.description(
     'Validates the primary buyer authentication path from form load to signed-in confirmation.',
