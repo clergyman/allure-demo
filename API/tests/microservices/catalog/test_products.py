@@ -8,6 +8,7 @@ import pytest
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
+@allure.tag("smoke")
 def test_get_product_returns_product_details(catalog_client):
     with allure.step("Request an existing product by id"):
         response = catalog_client.get_product("product-1")

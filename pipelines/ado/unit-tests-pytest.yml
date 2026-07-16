@@ -1,0 +1,38 @@
+name: unit-tests-pytest-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - unit/*
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  pythonVersion: "3.12"
+
+steps:
+  - checkout: self
+    clean: true
+
+  - task: UsePythonVersion@0
+    displayName: Use Python $(pythonVersion)
+    inputs:
+      versionSpec: $(pythonVersion)
+
+  - script: |
+      python -m venv .venv
+      .venv/bin/python3 -m pip install --upgrade pip
+      .venv/bin/python3 -m pip install -r requirements.txt
+    displayName: Install unit test dependencies
+    workingDirectory: unit
+
+  - script: |
+      .venv/bin/python3 -m pytest
+    displayName: Run unit tests with pytest
+    workingDirectory: unit

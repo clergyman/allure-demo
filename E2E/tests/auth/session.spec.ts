@@ -1,56 +1,78 @@
+import * as allure from 'allure-js-commons';
+
 import { LoginPage } from '../../pages/LoginPage';
 import { expect, test } from '../../fixtures/test';
 import { maybeFlake } from '../flaky';
+import { annotateScenario, attachScreenshot } from '../metadata';
 
-const sessionScenarios = [
-  {
-    name: 'guest can open the sign in form',
-    probability: 0,
-    email: 'guest@example.com',
-  },
-  {
-    name: 'buyer receives a welcome message after sign in',
-    probability: 0.05,
-    email: 'buyer@example.com',
-  },
-  {
-    name: 'returning buyer session banner is announced',
-    probability: 0.1,
-    email: 'returning.buyer@example.com',
-  },
-  {
-    name: 'keyboard-first buyer can submit credentials',
-    probability: 0.2,
-    email: 'keyboard.buyer@example.com',
-  },
-  {
-    name: 'password retry flow recovers after a typo',
-    probability: 0.4,
-    email: 'retry.buyer@example.com',
-  },
-];
+test('guest opens the sign in form', async ({ page }) => {
+  await annotateScenario({
+    feature: 'Authentication',
+    story: 'Guest session entry',
+    severity: 'trivial',
+  });
 
-for (const scenario of sessionScenarios) {
-  test(`${scenario.name} @flake-${Math.round(scenario.probability * 100)}`, async ({
-    page,
-    users,
-  }) => {
-    const loginPage = new LoginPage(page);
+  const loginPage = new LoginPage(page);
 
-    await test.step('Open the sign in page', async () => {
+  await allure.step('Open sign in entry point', async () => {
+    await loginPage.open();
+    await expect(page.getByRole('heading', { name: 'Demo Shop' })).toBeVisible();
+    await attachScreenshot('guest-session-entry', await page.screenshot());
+  });
+
+  await allure.step('Verify no authenticated state is shown yet', async () => {
+    await expect(page.getByRole('status')).toHaveText('');
+  });
+});
+
+test('returning buyer sees the session banner', async ({ page, users }) => {
+  await annotateScenario({
+    feature: 'Authentication',
+    story: 'Returning buyer session',
+    severity: 'normal',
+  });
+
+  const loginPage = new LoginPage(page);
+
+  await allure.step('Recreate returning buyer session', async () => {
+    await allure.step('Open the sign in page', async () => {
       await loginPage.open();
     });
-
-    await test.step(`Submit credentials for ${scenario.email}`, async () => {
-      await loginPage.login(scenario.email, users.buyer.password);
-    });
-
-    await test.step('Simulate session service stability', async () => {
-      maybeFlake(scenario.probability, scenario.name);
-    });
-
-    await test.step('Verify the session welcome message', async () => {
-      await expect(page.getByRole('status')).toHaveText('Welcome back');
+    await allure.step('Submit known buyer credentials', async () => {
+      await loginPage.login(users.buyer.email, users.buyer.password);
     });
   });
-}
+
+  await allure.step('Verify visible session banner', async () => {
+    await expect(page.getByRole('status')).toHaveText('Welcome back');
+    await attachScreenshot('returning-buyer-session', await page.screenshot());
+  });
+});
+
+test('password retry recovers after a typo', async ({ page, users }) => {
+  await annotateScenario({
+    feature: 'Authentication',
+    story: 'Password retry',
+    severity: 'minor',
+  });
+
+  const loginPage = new LoginPage(page);
+
+  await allure.step('Start retry flow after typo', async () => {
+    await loginPage.open();
+    await page.getByLabel('Email').fill(users.buyer.email);
+    await page.getByLabel('Password').fill('wrong-password');
+    await attachScreenshot('password-typo-before-retry', await page.screenshot());
+  });
+
+  await allure.step('Recover with the correct password', async () => {
+    await page.getByLabel('Password').fill(users.buyer.password);
+    await page.getByRole('button', { name: 'Sign in' }).click();
+  });
+
+  await allure.step('Confirm retry success', async () => {
+    maybeFlake(0.2, 'password retry confirmation after a corrected typo');
+    await expect(page.getByRole('status')).toHaveText('Welcome back');
+    await attachScreenshot('password-retry-success', await page.screenshot());
+  });
+});

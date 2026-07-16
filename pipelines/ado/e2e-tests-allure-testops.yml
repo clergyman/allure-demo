@@ -1,0 +1,68 @@
+name: e2e-tests-allure-testops-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - E2E/*
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  nodeVersion: "20.x"
+
+steps:
+  - checkout: self
+    clean: true
+
+  - task: NodeTool@0
+    displayName: Use Node.js $(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - script: |
+      npm ci
+    displayName: Install E2E dependencies
+    workingDirectory: E2E
+
+  - script: |
+      npx playwright install --with-deps
+    displayName: Install Playwright browsers
+    workingDirectory: E2E
+
+  - script: |
+      npx allure run --config ./allurerc.testops.mjs -- npx playwright test
+    displayName: Run E2E tests and upload to Allure TestOps
+    workingDirectory: E2E
+    env:
+      CI: "true"
+      TESTOPS_URL: $(TESTOPS_URL)
+      TESTOPS_TOKEN: $(TESTOPS_TOKEN)
+      TESTOPS_PROJECT_ID: $(TESTOPS_PROJECT_ID)
+
+  - script: |
+      mkdir -p allure-results
+    displayName: Ensure E2E test artifacts exist
+    condition: always()
+    workingDirectory: E2E
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish raw Allure result files
+    condition: always()
+    inputs:
+      targetPath: E2E/allure-results
+      artifact: e2e-allure-testops-results
+      publishLocation: pipeline
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Playwright test results
+    condition: always()
+    inputs:
+      targetPath: E2E/test-results
+      artifact: e2e-testops-test-results
+      publishLocation: pipeline

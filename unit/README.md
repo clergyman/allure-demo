@@ -1,24 +1,6 @@
 # Unit Tests
 
-This folder contains small Python unit tests.
-
-The code lives in `src/demo_shop`. The tests live in `tests`.
-
-## What you need
-
-- Python 3.11 or newer
-
-## Copy-paste from repo root
-
-```bash
-python3 -m venv unit/.venv
-unit/.venv/bin/python3 -m pip install -r unit/requirements.txt
-unit/.venv/bin/python3 -m pytest unit
-```
-
-## Copy-paste from this folder
-
-If your terminal is already inside `unit`:
+## 1. Pytest
 
 ```bash
 python3 -m venv .venv
@@ -26,23 +8,40 @@ python3 -m venv .venv
 .venv/bin/python3 -m pytest
 ```
 
-On Windows PowerShell from inside `unit`:
+## 2. Allure Report 3
 
-```powershell
-python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-.venv\Scripts\python.exe -m pytest
+```bash
+python3 -m venv .venv
+.venv/bin/python3 -m pip install -r requirements.txt
+npx allure run --config ./allurerc.mjs -- .venv/bin/python3 -m pytest --alluredir allure-results
 ```
 
-Dependencies are listed in `requirements.txt`.
+## 3. Allure 3 TestOps Upload
 
-## What the tests cover
+```bash
+python3 -m venv .venv
+.venv/bin/python3 -m pip install -r requirements.txt
+export CI=true
+export TESTOPS_URL=https://your-testops-host
+export TESTOPS_TOKEN=your-token
+export TESTOPS_PROJECT_ID=1
 
-- product pricing
-- shopping cart totals
-- user permissions
+npx allure run --config ./allurerc.testops.mjs -- .venv/bin/python3 -m pytest --alluredir allure-results
+```
 
-## Demo volume
+## 4. allurectl TestOps Upload
 
-The suite collects 500 tests. The volume tests are deterministic, so unit tests
-should not fail randomly.
+```bash
+python3 -m venv .venv
+.venv/bin/python3 -m pip install -r requirements.txt
+wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_darwin_arm64 -O ./allurectl
+chmod +x ./allurectl
+export CI=true
+export ALLURE_ENDPOINT=https://your-testops-host
+export ALLURE_TOKEN=your-token
+export ALLURE_PROJECT_ID=1
+export ALLURE_RESULTS=allure-results
+export ALLURE_LAUNCH_NAME="Unit Tests local pytest"
+
+./allurectl watch -- .venv/bin/python3 -m pytest --alluredir allure-results
+```

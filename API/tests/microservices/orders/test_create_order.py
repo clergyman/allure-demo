@@ -7,6 +7,7 @@ import allure
 @allure.severity(allure.severity_level.BLOCKER)
 @allure.label("layer", "api")
 @allure.label("component", "orders-service")
+@allure.tag("smoke")
 def test_create_order_returns_created_order(orders_client):
     with allure.step("Create an order for an in-stock product"):
         response = orders_client.create_order(

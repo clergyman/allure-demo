@@ -1,0 +1,77 @@
+name: e2e-tests-allurectl-testops-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - E2E/*
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  nodeVersion: "20.x"
+
+steps:
+  - checkout: self
+    clean: true
+
+  - task: NodeTool@0
+    displayName: Use Node.js $(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - script: |
+      npm ci
+    displayName: Install E2E dependencies
+    workingDirectory: E2E
+
+  - script: |
+      npx playwright install --with-deps
+    displayName: Install Playwright browsers
+    workingDirectory: E2E
+
+  - script: |
+      wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -O ./allurectl
+      chmod +x ./allurectl
+    displayName: Install allurectl
+    workingDirectory: E2E
+
+  - script: |
+      ./allurectl watch -- npx playwright test
+    displayName: Run E2E tests and upload to Allure TestOps with allurectl
+    workingDirectory: E2E
+    env:
+      CI: "true"
+      ALLURE_ENDPOINT: $(ALLURE_ENDPOINT)
+      ALLURE_TOKEN: $(ALLURE_TOKEN)
+      ALLURE_PROJECT_ID: $(ALLURE_PROJECT_ID)
+      ALLURE_RESULTS: allure-results
+      ALLURE_LAUNCH_NAME: "E2E Tests Azure DevOps Playwright"
+      ALLURE_LAUNCH_TAGS: "e2e,demo-shop"
+
+  - script: |
+      mkdir -p allure-results
+    displayName: Ensure E2E test artifacts exist
+    condition: always()
+    workingDirectory: E2E
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish raw Allure result files
+    condition: always()
+    inputs:
+      targetPath: E2E/allure-results
+      artifact: e2e-allurectl-results
+      publishLocation: pipeline
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Playwright test results
+    condition: always()
+    inputs:
+      targetPath: E2E/test-results
+      artifact: e2e-allurectl-test-results
+      publishLocation: pipeline

@@ -7,6 +7,7 @@ import allure
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.label("layer", "api")
 @allure.label("component", "orders-service")
+@allure.tag("smoke")
 def test_get_order_returns_status(orders_client):
     with allure.step("Request an existing order by id"):
         response = orders_client.get_order("order-1")

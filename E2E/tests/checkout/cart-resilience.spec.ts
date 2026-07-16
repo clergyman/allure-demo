@@ -1,52 +1,53 @@
+import * as allure from 'allure-js-commons';
+
 import { CatalogPage } from '../../pages/CatalogPage';
 import { expect, test } from '../../fixtures/test';
 import { maybeFlake } from '../flaky';
+import { annotateScenario, attachScreenshot } from '../metadata';
 
-const cartScenarios = [
-  {
-    name: 'cart accepts first backpack item',
-    probability: 0,
-  },
-  {
-    name: 'cart preserves add action during checkout handoff',
-    probability: 0.35,
-  },
-  {
-    name: 'cart status survives a delayed stock check',
-    probability: 0.5,
-  },
-  {
-    name: 'checkout intent is remembered after catalog refresh',
-    probability: 0.5,
-  },
-  {
-    name: 'cart badge update is visible before checkout',
-    probability: 0.45,
-  },
-];
-
-for (const scenario of cartScenarios) {
-  test(`${scenario.name} @flake-${Math.round(scenario.probability * 100)}`, async ({
-    page,
-  }) => {
-    const catalogPage = new CatalogPage(page);
-
-    await test.step('Open the catalog page', async () => {
-      await catalogPage.open();
-    });
-
-    await test.step('Add Demo Backpack to the cart', async () => {
-      await catalogPage.addBackpackToCart();
-    });
-
-    await test.step('Simulate checkout handoff stability', async () => {
-      maybeFlake(scenario.probability, scenario.name);
-    });
-
-    await test.step('Verify the cart still shows the added item', async () => {
-      await expect(page.getByRole('status')).toHaveText(
-        'Demo Backpack added to cart',
-      );
-    });
+test('cart keeps the item before checkout @smoke', async ({ page }) => {
+  await annotateScenario({
+    feature: 'Checkout',
+    story: 'Cart state before checkout',
+    severity: 'blocker',
+    smoke: true,
   });
-}
+
+  const catalogPage = new CatalogPage(page);
+
+  await allure.step('Create checkout candidate cart', async () => {
+    await catalogPage.open();
+    await catalogPage.addBackpackToCart();
+    await attachScreenshot('checkout-cart-created', await page.screenshot());
+  });
+
+  await allure.step('Verify cart state before checkout', async () => {
+    await expect(page.getByRole('status')).toHaveText('Demo Backpack added to cart');
+    await attachScreenshot('checkout-cart-ready', await page.screenshot());
+  });
+});
+
+test('checkout handoff preserves cart status after stock check', async ({ page }) => {
+  await annotateScenario({
+    feature: 'Checkout',
+    story: 'Stock check handoff',
+    severity: 'normal',
+  });
+
+  const catalogPage = new CatalogPage(page);
+
+  await allure.step('Create cart before stock check', async () => {
+    await catalogPage.open();
+    await catalogPage.addBackpackToCart();
+  });
+
+  await allure.step('Simulate delayed stock check', async () => {
+    await page.waitForTimeout(100);
+    maybeFlake(0.35, 'checkout handoff after delayed stock check');
+  });
+
+  await allure.step('Verify checkout can continue with the cart item', async () => {
+    await expect(page.getByRole('status')).toHaveText('Demo Backpack added to cart');
+    await attachScreenshot('checkout-stock-check-survived', await page.screenshot());
+  });
+});

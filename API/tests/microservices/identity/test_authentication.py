@@ -7,6 +7,7 @@ import allure
 @allure.severity(allure.severity_level.BLOCKER)
 @allure.label("layer", "api")
 @allure.label("component", "identity-service")
+@allure.tag("smoke")
 def test_login_returns_token_for_valid_user(identity_client):
     with allure.step("Submit valid buyer credentials"):
         response = identity_client.login("buyer@example.com", "correct-password")

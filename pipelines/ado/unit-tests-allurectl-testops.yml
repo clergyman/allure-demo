@@ -1,0 +1,66 @@
+name: unit-tests-allurectl-testops-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - unit/*
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  pythonVersion: "3.12"
+
+steps:
+  - checkout: self
+    clean: true
+
+  - task: UsePythonVersion@0
+    displayName: Use Python $(pythonVersion)
+    inputs:
+      versionSpec: $(pythonVersion)
+
+  - script: |
+      python -m venv .venv
+      .venv/bin/python3 -m pip install --upgrade pip
+      .venv/bin/python3 -m pip install -r requirements.txt
+    displayName: Install unit test dependencies
+    workingDirectory: unit
+
+  - script: |
+      wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -O ./allurectl
+      chmod +x ./allurectl
+    displayName: Install allurectl
+    workingDirectory: unit
+
+  - script: |
+      ./allurectl watch -- .venv/bin/python3 -m pytest --alluredir allure-results
+    displayName: Run unit tests and upload to Allure TestOps with allurectl
+    workingDirectory: unit
+    env:
+      CI: "true"
+      ALLURE_ENDPOINT: $(ALLURE_ENDPOINT)
+      ALLURE_TOKEN: $(ALLURE_TOKEN)
+      ALLURE_PROJECT_ID: $(ALLURE_PROJECT_ID)
+      ALLURE_RESULTS: allure-results
+      ALLURE_LAUNCH_NAME: "Unit Tests Azure DevOps pytest"
+      ALLURE_LAUNCH_TAGS: "unit,demo-shop"
+
+  - script: |
+      mkdir -p allure-results
+    displayName: Ensure unit test artifacts exist
+    condition: always()
+    workingDirectory: unit
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish raw Allure result files
+    condition: always()
+    inputs:
+      targetPath: unit/allure-results
+      artifact: unit-allurectl-results
+      publishLocation: pipeline

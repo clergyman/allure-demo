@@ -8,6 +8,7 @@ import pytest
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
+@allure.tag("smoke")
 def test_search_finds_matching_product(catalog_client):
     with allure.step("Search catalog for backpack"):
         response = catalog_client.search("backpack")

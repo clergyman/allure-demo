@@ -1,67 +1,47 @@
 # E2E Tests
 
-This folder contains Playwright end-to-end tests.
-
-The demo tests render small pages inside the browser, so you do not need a real website yet.
-
-## What you need
-
-- Node.js 20 or newer
-- npm
-
-## Install
-
-From this folder:
+## 1. Playwright
 
 ```bash
 npm install
 npx playwright install
-```
-
-## Run all tests
-
-```bash
 npx playwright test
 ```
 
-## Playwright traces
-
-Traces are captured for every test run and stored under `test-results`.
-Open the HTML report to inspect them:
+## 2. Allure Report 3
 
 ```bash
-npx playwright show-report
+npm install
+npx playwright install
+npx allure run --config ./allurerc.mjs -- npx playwright test
 ```
 
-## Run tests in one browser
+## 3. Allure 3 TestOps Upload
 
 ```bash
-npx playwright test --project=chromium
+npm install
+npx playwright install
+export CI=true
+export TESTOPS_URL=https://your-testops-host
+export TESTOPS_TOKEN=your-token
+export TESTOPS_PROJECT_ID=1
+
+npx allure run --config ./allurerc.testops.mjs -- npx playwright test
 ```
 
-## See the HTML test report
+## 4. allurectl TestOps Upload
 
 ```bash
-npx playwright show-report
-```
+npm install
+npx playwright install
+wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_darwin_arm64 -O ./allurectl
+chmod +x ./allurectl
+export CI=true
+export ALLURE_ENDPOINT=https://your-testops-host
+export ALLURE_TOKEN=your-token
+export ALLURE_PROJECT_ID=1
+export ALLURE_RESULTS=allure-results
+export ALLURE_LAUNCH_NAME="E2E Tests local Playwright"
 
-## Demo volume and flakes
-
-The suite collects 51 browser executions across Chromium, Firefox, and WebKit.
-Some product scenarios are intentionally flaky, with probabilities shown in the
-test names such as `@flake-25` or `@flake-50`.
-
-For a deterministic verification run, disable the demo flakes:
-
-```bash
-DEMO_DISABLE_FLAKES=1 npx playwright test
-```
-
-## Folder layout
-
-```text
-tests/     user journeys grouped by product area
-pages/     page objects used by tests
-fixtures/  shared Playwright setup and test data
-helpers/   small reusable helper functions
+./allurectl watch -- npx playwright test
 ```
