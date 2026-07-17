@@ -53,25 +53,3 @@ steps:
       ALLURE_RESULTS: allure-results
       ALLURE_LAUNCH_NAME: "E2E Tests Azure DevOps Playwright"
       ALLURE_LAUNCH_TAGS: "e2e,demo-shop"
-
-  - script: |
-      mkdir -p allure-results
-    displayName: Ensure E2E test artifacts exist
-    condition: always()
-    workingDirectory: E2E
-
-  - task: PublishPipelineArtifact@1
-    displayName: Publish raw Allure result files
-    condition: always()
-    inputs:
-      targetPath: E2E/allure-results
-      artifact: e2e-allurectl-results
-      publishLocation: pipeline
-
-  - task: PublishPipelineArtifact@1
-    displayName: Publish Playwright test results
-    condition: always()
-    inputs:
-      targetPath: E2E/test-results
-      artifact: e2e-allurectl-test-results
-      publishLocation: pipeline
