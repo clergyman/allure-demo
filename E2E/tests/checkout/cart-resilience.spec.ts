@@ -12,7 +12,7 @@ test('cart keeps the item before checkout @smoke', async ({ page }) => {
     severity: 'blocker',
     smoke: true,
   });
-  await allure.issue('36', 'epic');
+  await allure.issue('27', 'epic');
 
   const catalogPage = new CatalogPage(page);
 
@@ -34,7 +34,7 @@ test('checkout handoff preserves cart status after stock check', async ({ page }
     story: 'Stock check handoff',
     severity: 'normal',
   });
-  await allure.issue('37', 'epic');
+  await allure.issue('27', 'epic');
 
   const catalogPage = new CatalogPage(page);
 

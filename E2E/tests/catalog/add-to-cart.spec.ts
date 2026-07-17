@@ -11,7 +11,7 @@ test('buyer adds backpack to the cart @smoke', async ({ page }) => {
     severity: 'blocker',
     smoke: true,
   });
-  await allure.issue('31', 'epic');
+  await allure.issue('27', 'epic');
 
   const catalogPage = new CatalogPage(page);
 
@@ -43,7 +43,7 @@ test('cart preview total matches checkout handoff', async ({ page }) => {
     story: 'Checkout preview handoff',
     severity: 'critical',
   });
-  await allure.issue('32', 'epic');
+  await allure.issue('27', 'epic');
 
   const catalogPage = new CatalogPage(page);
 

@@ -27,7 +27,7 @@ export default {
     awesome: {
       options: {
         reportName: "API Tests Allure Report",
-        singleFile: false,
+        singleFile: true,
         reportLanguage: "en",
         open: false,
         publish: true,

@@ -12,7 +12,7 @@ test('buyer discovers the backpack product @smoke', async ({ page }) => {
     severity: 'critical',
     smoke: true,
   });
-  await allure.issue('33', 'epic');
+  await allure.issue('27', 'epic');
 
   const catalogPage = new CatalogPage(page);
 
@@ -37,7 +37,7 @@ test('catalog search highlights the best matching product', async ({ page }) => 
     story: 'Product search relevance',
     severity: 'critical',
   });
-  await allure.issue('34', 'epic');
+  await allure.issue('27', 'epic');
 
   const catalogPage = new CatalogPage(page);
 
@@ -60,7 +60,7 @@ test('catalog action survives a slow inventory refresh', async ({ page }) => {
     story: 'Inventory refresh resilience',
     severity: 'normal',
   });
-  await allure.issue('35', 'epic');
+  await allure.issue('27', 'epic');
 
   const catalogPage = new CatalogPage(page);
 
