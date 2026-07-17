@@ -2,6 +2,20 @@ import { env } from "node:process";
 
 export default {
   name: "API Tests TestOps Upload",
+  categories: {
+    rules: [
+      {
+        name: "API failures by severity and component",
+        id: "api-failures-by-severity-and-component",
+        matchers: {
+          statuses: ["failed", "broken"],
+        },
+        groupBy: ["severity", { label: "component" }],
+        groupByMessage: true,
+        expand: true,
+      },
+    ],
+  },
   qualityGate: {
     rules: [
       {
