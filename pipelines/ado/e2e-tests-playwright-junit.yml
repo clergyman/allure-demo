@@ -1,0 +1,51 @@
+name: e2e-tests-playwright-junit-$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger: none
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  nodeVersion: "20.x"
+  PLAYWRIGHT_JUNIT_OUTPUT_NAME: playwright-junit-results.xml
+  PLAYWRIGHT_JUNIT_OUTPUT_DIR: $(System.DefaultWorkingDirectory)/E2E/test-results/junit
+
+steps:
+  - checkout: self
+    clean: true
+
+  - task: NodeTool@0
+    displayName: Use Node.js $(nodeVersion)
+    inputs:
+      versionSpec: $(nodeVersion)
+
+  - script: |
+      npm ci
+    displayName: Install E2E dependencies
+    workingDirectory: E2E
+
+  - script: |
+      npx playwright install --with-deps
+    displayName: Install Playwright browsers
+    workingDirectory: E2E
+
+  - script: |
+      npx playwright test --reporter=line,junit
+    displayName: Run E2E tests with Playwright and JUnit
+    workingDirectory: E2E
+    env:
+      PLAYWRIGHT_JUNIT_OUTPUT_NAME: $(PLAYWRIGHT_JUNIT_OUTPUT_NAME)
+      PLAYWRIGHT_JUNIT_OUTPUT_DIR: $(PLAYWRIGHT_JUNIT_OUTPUT_DIR)
+
+  - task: PublishTestResults@2
+    displayName: Publish Playwright test results to Azure DevOps
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: "$(PLAYWRIGHT_JUNIT_OUTPUT_NAME)"
+      searchFolder: "$(PLAYWRIGHT_JUNIT_OUTPUT_DIR)"
+      testRunTitle: "Playwright E2E ($(Build.SourceBranchName))"
+      mergeTestResults: true
+      failTaskOnFailedTests: true
