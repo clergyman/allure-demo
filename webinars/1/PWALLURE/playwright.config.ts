@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   outputDir: 'test-results',
+  //reporter: [['list'], ['html', { open: 'never' }]],
   reporter: [['list'], ['allure-playwright']],
   use: {
     screenshot: 'only-on-failure',

@@ -27,6 +27,7 @@ npm install --save-dev allure@latest allure-playwright@latest
 In `playwright.config.ts`, replace the regular reporter with the Allure reporter:
 
 ```ts
+//reporter: [['list'], ['html', { open: 'never' }]],
 reporter: [['list'], ['allure-playwright']],
 ```
 
