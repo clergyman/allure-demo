@@ -12,6 +12,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: Jira + GH Cafe
     defaults:
       run:
         working-directory: E2E
