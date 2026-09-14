@@ -1,0 +1,36 @@
+name: E2E Tests Allure 3 TestOps Upload
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - E2E/**
+      - .github/workflows/e2e-tests-allure3-testops.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: E2E
+    env:
+      CI: true
+      TESTOPS_URL: ${{ secrets.TESTOPS_URL }}
+      TESTOPS_TOKEN: ${{ secrets.TESTOPS_TOKEN }}
+      TESTOPS_PROJECT_ID: ${{ secrets.TESTOPS_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: E2E/package-lock.json
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps
+
+      - run: npx allure run --config ./allurerc.testops.mjs -- npx playwright test
