@@ -10,6 +10,7 @@ test('guest opens the sign in form', async ({ page }) => {
     feature: 'Identity',
     story: 'Guest session entry',
     severity: 'trivial',
+    jira: 'ATO-611',
   });
   await allure.issue('27', 'epic');
 
@@ -31,6 +32,7 @@ test('returning buyer sees the session banner', async ({ page, users }) => {
     feature: 'Identity',
     story: 'Returning buyer session',
     severity: 'normal',
+    jira: 'ATO-612',
   });
   await allure.issue('27', 'epic');
 
@@ -56,6 +58,7 @@ test('password retry recovers after a typo', async ({ page, users }) => {
     feature: 'Identity',
     story: 'Password retry',
     severity: 'minor',
+    jira: 'ATO-613',
   });
   await allure.issue('27', 'epic');
 

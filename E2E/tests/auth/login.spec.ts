@@ -9,6 +9,7 @@ test('buyer signs in with valid credentials @smoke', async ({ page, users }) => 
     feature: 'Identity',
     story: 'Buyer sign in',
     severity: 'blocker',
+    jira: 'ATO-610',
     smoke: true
   });
   await allure.label('work_item', '27');

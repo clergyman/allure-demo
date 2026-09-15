@@ -10,6 +10,7 @@ test('cart keeps the item before checkout @smoke', async ({ page }) => {
     feature: 'Orders',
     story: 'Cart state before checkout',
     severity: 'blocker',
+    jira: 'ATO-619',
     smoke: true,
   });
   await allure.issue('27', 'epic');
@@ -33,6 +34,7 @@ test('checkout handoff preserves cart status after stock check', async ({ page }
     feature: 'Orders',
     story: 'Stock check handoff',
     severity: 'normal',
+    jira: 'ATO-620',
   });
   await allure.issue('27', 'epic');
 

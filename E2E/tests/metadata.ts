@@ -7,6 +7,7 @@ type ScenarioMetadata = {
   feature: string;
   story: string;
   severity: Severity;
+  jira?: string;
   smoke?: boolean;
 };
 
@@ -14,6 +15,7 @@ export function annotateScenario({
   feature,
   story,
   severity,
+  jira,
   smoke = false,
 }: ScenarioMetadata) {
   return test.step('Record Allure scenario metadata', async () => {
@@ -22,6 +24,9 @@ export function annotateScenario({
     await allure.story(story);
     await allure.layer('e2e');
     await allure.severity(severity);
+    if (jira) {
+      await allure.label('Jira', jira);
+    }
 
     void smoke;
   });

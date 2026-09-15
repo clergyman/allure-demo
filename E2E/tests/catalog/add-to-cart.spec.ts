@@ -9,6 +9,7 @@ test('buyer adds backpack to the cart @smoke', async ({ page }) => {
     feature: 'Orders',
     story: 'Add product to cart',
     severity: 'blocker',
+    jira: 'ATO-617',
     smoke: true,
   });
   await allure.issue('27', 'epic');
@@ -42,6 +43,7 @@ test('cart preview total matches checkout handoff', async ({ page }) => {
     feature: 'Orders',
     story: 'Checkout preview handoff',
     severity: 'critical',
+    jira: 'ATO-618',
   });
   await allure.issue('27', 'epic');
 

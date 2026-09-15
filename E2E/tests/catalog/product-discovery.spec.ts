@@ -10,6 +10,7 @@ test('buyer discovers the backpack product @smoke', async ({ page }) => {
     feature: 'Catalog',
     story: 'Product discovery',
     severity: 'critical',
+    jira: 'ATO-614',
     smoke: true,
   });
   await allure.issue('27', 'epic');
@@ -36,6 +37,7 @@ test('catalog search highlights the best matching product', async ({ page }) => 
     feature: 'Catalog',
     story: 'Product search relevance',
     severity: 'critical',
+    jira: 'ATO-615',
   });
   await allure.issue('27', 'epic');
 
@@ -59,6 +61,7 @@ test('catalog action survives a slow inventory refresh', async ({ page }) => {
     feature: 'Catalog',
     story: 'Inventory refresh resilience',
     severity: 'normal',
+    jira: 'ATO-616',
   });
   await allure.issue('27', 'epic');
 
