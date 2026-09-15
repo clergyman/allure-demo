@@ -9,13 +9,6 @@ on:
       ALLURE_USERNAME:
         description: "Service parameter. Leave blank."
         required: false
-  push:
-    branches:
-      - main
-    paths:
-      - unit/**
-      - .github/workflows/unit-tests-allure3-testops.yml
-
 jobs:
   test:
     runs-on: ubuntu-latest
