@@ -6,6 +6,9 @@ on:
       ALLURE_JOB_RUN_ID:
         description: "Service parameter. Leave blank."
         required: false
+      ALLURE_USERNAME:
+        description: "Service parameter. Leave blank."
+        required: false
   push:
     branches:
       - main
@@ -26,7 +29,8 @@ jobs:
       TESTOPS_URL: ${{ secrets.TESTOPS_URL }}
       TESTOPS_TOKEN: ${{ secrets.TESTOPS_TOKEN }}
       TESTOPS_PROJECT_ID: ${{ secrets.TESTOPS_PROJECT_ID }}
-      ALLURE_JOB_RUN_ID: ${{ inputs.ALLURE_JOB_RUN_ID }}
+      ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+      ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME }}
     steps:
       - uses: actions/checkout@v4
 
@@ -43,3 +47,6 @@ jobs:
       - run: npm install --no-save allure@latest @allurereport/plugin-testops@latest
 
       - run: npx allure run --config ./allurerc.testops.mjs -- python -m pytest --alluredir allure-results
+        continue-on-error: true
+
+      - run: npx allure quality-gate ./allure-results --config ./allurerc.testops.mjs
