@@ -2,6 +2,10 @@ name: Unit Tests Allure 3 TestOps Upload
 
 on:
   workflow_dispatch:
+    inputs:
+      ALLURE_JOB_RUN_ID:
+        description: "Service parameter. Leave blank."
+        required: false
   push:
     branches:
       - main
