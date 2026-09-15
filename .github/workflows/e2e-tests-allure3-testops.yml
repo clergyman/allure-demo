@@ -25,6 +25,7 @@ jobs:
       TESTOPS_URL: ${{ secrets.TESTOPS_URL }}
       TESTOPS_TOKEN: ${{ secrets.TESTOPS_TOKEN }}
       TESTOPS_PROJECT_ID: ${{ secrets.TESTOPS_PROJECT_ID }}
+      ALLURE_JOB_RUN_ID: ${{ inputs.ALLURE_JOB_RUN_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,6 +36,8 @@ jobs:
           cache-dependency-path: E2E/package-lock.json
 
       - run: npm ci
+
+      - run: npm install --no-save allure@latest @allurereport/plugin-testops@latest
 
       - run: npx playwright install --with-deps
 
