@@ -1,0 +1,49 @@
+name: E2E Tests allurectl TestOps Upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      ALLURE_JOB_RUN_ID:
+        description: "Service parameter. Leave blank."
+        required: false
+      ALLURE_USERNAME:
+        description: "Service parameter. Leave blank."
+        required: false
+  push:
+    branches:
+      - main
+    paths:
+      - E2E/**
+      - .github/workflows/e2e-tests-allurectl-testops.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: Jira + GH Cafe
+    defaults:
+      run:
+        working-directory: E2E
+    env:
+      ALLURE_RESULTS: allure-results
+      ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+      ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: E2E/package-lock.json
+
+      - uses: allure-framework/setup-allurectl@v1
+        with:
+          allure-endpoint: ${{ secrets.TESTOPS_URL }}
+          allure-token: ${{ secrets.TESTOPS_TOKEN }}
+          allure-project-id: ${{ secrets.TESTOPS_PROJECT_ID }}
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps
+
+      - run: allurectl watch -- npx playwright test
