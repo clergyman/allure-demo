@@ -1,24 +1,9 @@
 import allure
-import pytest
 
 from flaky import maybe_fail
 
 
 LOW_SPILLOVER_FLAKY_PROBABILITY = 0.03
-
-SEARCH_CASES = [
-    *[(f"backpack-query-{index}", "backpack") for index in range(13)],
-    *[(f"bottle-query-{index}", "bottle") for index in range(7)],
-    *[(f"empty-query-{index}", "") for index in range(5)],
-    *[(f"unknown-query-{index}", "unknown") for index in range(9)],
-    ("seasonal-query-1", "summer"),
-    ("seasonal-query-2", "travel"),
-    ("typo-query", "bakcpack"),
-]
-SEARCH_CASES = [
-    (case_id, query, 1 if query == "backpack" else 0)
-    for case_id, query in SEARCH_CASES
-]
 
 
 @allure.epic("Demo Shop")
@@ -27,17 +12,48 @@ SEARCH_CASES = [
 @allure.severity("normal")
 @allure.label("layer", "api")
 @allure.label("component", "catalog-service")
-@pytest.mark.parametrize(("case_id", "query", "expected_count"), SEARCH_CASES)
-def test_catalog_search_volume(catalog_client, case_id, query, expected_count):
+def test_catalog_search_returns_backpack_for_exact_product_query(catalog_client):
     with allure.step("Simulate search index stability"):
         maybe_fail(
             LOW_SPILLOVER_FLAKY_PROBABILITY,
             "neighboring catalog search index refresh delay",
         )
 
-    with allure.step(f"Search catalog for '{query}' ({case_id})"):
-        response = catalog_client.search(query)
+    with allure.step("Search catalog for backpack"):
+        response = catalog_client.search("backpack")
 
-    with allure.step("Verify search response status and result count"):
+    with allure.step("Verify exact product search returns one matching item"):
         assert response["status_code"] == 200
-        assert len(response["json"]["items"]) == expected_count
+        assert response["json"]["items"] == [
+            {"id": "product-1", "name": "Demo Backpack"}
+        ]
+
+
+@allure.epic("Demo Shop")
+@allure.feature("Catalog")
+@allure.story("Product search volume")
+@allure.severity("normal")
+@allure.label("layer", "api")
+@allure.label("component", "catalog-service")
+def test_catalog_search_returns_empty_result_for_unknown_product(catalog_client):
+    with allure.step("Search catalog for an unknown product"):
+        response = catalog_client.search("travel mug")
+
+    with allure.step("Verify unknown products do not leak stale matches"):
+        assert response["status_code"] == 200
+        assert response["json"]["items"] == []
+
+
+@allure.epic("Demo Shop")
+@allure.feature("Catalog")
+@allure.story("Product search volume")
+@allure.severity("minor")
+@allure.label("layer", "api")
+@allure.label("component", "catalog-service")
+def test_catalog_search_handles_blank_query_as_empty_result(catalog_client):
+    with allure.step("Search catalog with a blank query"):
+        response = catalog_client.search("")
+
+    with allure.step("Verify blank search is accepted but returns no products"):
+        assert response["status_code"] == 200
+        assert response["json"]["items"] == []

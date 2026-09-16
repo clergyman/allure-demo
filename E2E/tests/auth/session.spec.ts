@@ -19,7 +19,14 @@ test('guest opens the sign in form', async ({ page }) => {
   await allure.step('Open sign in entry point', async () => {
     await loginPage.open();
     await expect(page.getByRole('heading', { name: 'Demo Shop' })).toBeVisible();
+    await expect(page.getByText('Secure buyer access')).toBeVisible();
     await attachScreenshot('guest-session-entry', await page.screenshot());
+  });
+
+  await allure.step('Inspect empty guest form state', async () => {
+    await expect(page.getByLabel('Email')).toHaveValue('');
+    await expect(page.getByLabel('Password')).toHaveValue('');
+    await expect(page.getByLabel('Remember this device')).not.toBeChecked();
   });
 
   await allure.step('Verify no authenticated state is shown yet', async () => {
@@ -42,6 +49,10 @@ test('returning buyer sees the session banner', async ({ page, users }) => {
     await allure.step('Open the sign in page', async () => {
       await loginPage.open();
     });
+    await allure.step('Opt in to persisted device session', async () => {
+      await page.getByLabel('Remember this device').check();
+      await expect(page.getByLabel('Remember this device')).toBeChecked();
+    });
     await allure.step('Submit known buyer credentials', async () => {
       await loginPage.login(users.buyer.email, users.buyer.password);
     });
@@ -49,6 +60,7 @@ test('returning buyer sees the session banner', async ({ page, users }) => {
 
   await allure.step('Verify visible session banner', async () => {
     await expect(page.getByRole('status')).toHaveText('Welcome back');
+    await expect(page.getByLabel('Email')).toHaveValue(users.buyer.email);
     await attachScreenshot('returning-buyer-session', await page.screenshot());
   });
 });
@@ -71,9 +83,14 @@ test('password retry recovers after a typo', async ({ page, users }) => {
     await attachScreenshot('password-typo-before-retry', await page.screenshot());
   });
 
+  await allure.step('Clear only the mistyped password field', async () => {
+    await page.getByLabel('Password').clear();
+    await expect(page.getByLabel('Email')).toHaveValue(users.buyer.email);
+  });
+
   await allure.step('Recover with the correct password', async () => {
     await page.getByLabel('Password').fill(users.buyer.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('button', { name: 'Sign in', exact: true }).click();
   });
 
   await allure.step('Confirm retry success', async () => {
