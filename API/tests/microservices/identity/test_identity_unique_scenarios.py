@@ -247,3 +247,19 @@ def test_identity_audit_sink_broken_demo(identity_client):
     identity_metadata("Audit sink availability", "normal")
     verify_login_rejected(identity_client, "unknown@example.com", "correct-password")
     raise RuntimeError("Demo broken test: identity audit sink was unavailable.")
+
+
+def test_identity_locked_account_policy_failure_demo(identity_client):
+    identity_metadata("Locked account policy", "critical")
+    with allure.step("Submit login request for a locked buyer"):
+        response = identity_client.login("locked@example.com", "correct-password")
+    with allure.step("Verify locked account returns a policy-specific error"):
+        assert response["json"]["error"] == "Account locked"
+
+
+def test_identity_token_claim_contract_failure_demo(identity_client):
+    identity_metadata("Token claims contract", "critical")
+    with allure.step("Login as known buyer"):
+        response = identity_client.login("buyer@example.com", "correct-password")
+    with allure.step("Verify token claims include session expiry"):
+        assert response["json"]["expires_in"] == 3600

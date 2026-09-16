@@ -285,3 +285,19 @@ def test_orders_fulfillment_adapter_broken_demo(orders_client):
     orders_metadata("Fulfillment adapter availability", "normal")
     verify_order_status_found(orders_client)
     raise RuntimeError("Demo broken test: fulfillment adapter contract fixture was missing.")
+
+
+def test_orders_tax_calculation_failure_demo(orders_client):
+    orders_metadata("Tax calculation", "critical")
+    with allure.step("Create an order that should include tax details"):
+        response = orders_client.create_order("user-1", "product-1", 2)
+    with allure.step("Verify tax total is present and correct"):
+        assert response["json"]["tax_total"] == "9.28"
+
+
+def test_orders_shipping_sla_failure_demo(orders_client):
+    orders_metadata("Shipping SLA", "normal")
+    with allure.step("Create an order for checkout handoff"):
+        response = orders_client.create_order("user-1", "product-1", 1)
+    with allure.step("Verify shipping SLA is available to checkout"):
+        assert response["json"].get("shipping_sla") == "2 business days"

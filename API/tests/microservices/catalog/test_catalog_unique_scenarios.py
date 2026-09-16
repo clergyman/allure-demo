@@ -274,3 +274,11 @@ def test_catalog_price_index_broken_demo(catalog_client):
     catalog_metadata("Price index availability", "normal")
     verify_product(catalog_client, "product-1", "Demo Backpack", 12)
     raise RuntimeError("Demo broken test: price index response was missing from fixture.")
+
+
+def test_catalog_supplier_feed_contract_failure_demo(catalog_client):
+    catalog_metadata("Supplier feed contract", "critical")
+    with allure.step("Read bottle details from catalog projection"):
+        response = catalog_client.get_product("product-2")
+    with allure.step("Verify supplier feed exposed restock date"):
+        assert response["json"]["restock_date"] == "2026-10-01"
