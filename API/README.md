@@ -2,7 +2,25 @@
 
 This folder contains Python API tests grouped by microservice.
 
-There is no real server in this demo yet. The tests use tiny fake clients so the structure is easy to understand before we connect real APIs.
+The original tests use in-memory demo clients. HTTP contract tests start a local
+server automatically and make real HTTP calls over loopback, without contacting
+external services. The server includes intentional defects for triage.
+
+Each HTTP call is an Allure step with a structured HTTP exchange attachment and
+JSON request/response attachments. Captures include method, URL, headers, bodies,
+status, timestamps, and a correlation ID. Authorization and sensitive JSON fields
+are redacted. These attachments are included in the results uploaded to TestOps;
+the specialized exchange viewer depends on the installed TestOps version.
+
+Run only the new HTTP scenarios:
+
+```bash
+DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest -k http_contracts --alluredir allure-results
+```
+
+The 18 explicit HTTP tests include nine intentional failures across Catalog,
+Identity, and Orders: currency/refund mismatches, upstream 5xx errors, and broken
+response schemas. They are labeled by feature, story, component, and microservice.
 
 ## What you need
 
@@ -99,7 +117,7 @@ DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest tests/microservices/orders
 
 ## Demo volume and flakes
 
-The suite collects 200 tests. The volume tests include rare demo flakes with a
+The volume tests include rare demo flakes with a
 0.1% per-test probability to make reports show occasional unstable API behavior.
 
 For deterministic runs, the commands above set `DEMO_DISABLE_FLAKES=1`.
