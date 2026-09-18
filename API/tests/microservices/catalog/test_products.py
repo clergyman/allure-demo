@@ -1,5 +1,4 @@
 import allure
-import pytest
 
 
 @allure.epic("Demo Shop")
@@ -16,9 +15,7 @@ def test_get_product_returns_product_details(catalog_client):
     with allure.step("Verify product details are returned"):
         assert response["status_code"] == 200
         assert response["json"]["name"] == "Demo Backpack"
-        pytest.fail(
-            "Demo stable failure: catalog inventory projection returned stale stock."
-        )
+        assert response["json"]["stock"] == 12
 
 
 @allure.epic("Demo Shop")

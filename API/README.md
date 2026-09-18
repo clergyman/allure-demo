@@ -18,9 +18,32 @@ Run only the new HTTP scenarios:
 DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest -k http_contracts --alluredir allure-results
 ```
 
-The 18 explicit HTTP tests include nine intentional failures across Catalog,
-Identity, and Orders: currency/refund mismatches, upstream 5xx errors, and broken
-response schemas. They are labeled by feature, story, component, and microservice.
+The 18 HTTP contract tests and 50 additional non-parametrized HTTP scenarios
+exercise the same shop data model. Intentional failures are localized to one
+incident: `CAT-PRICE-001`, in Catalog / Regional pricing. Its ten failing scenarios
+are grouped in the `Regional pricing` suite, under `Catalog`, with the
+`EUR storefronts` sub-suite. All other suites pass in deterministic runs.
+
+| Feature | Passed | Failed |
+| --- | --- | --- |
+| Catalog | 68 | 10 |
+| Identity | 71 | 0 |
+| Orders | 78 | 0 |
+
+Catalog search, product details, availability, recommendations, and media remain
+healthy. Identity and Orders remain entirely healthy, including token refresh and
+refunds. The suite contains 227 tests overall.
+
+The ten failures have the `triage-cluster` tag and `CAT-PRICE-001` defect label.
+The cluster uses the same
+actual validator traceback in Allure status details, excluding scenario caller
+frames so traces match exactly. The original full pytest traceback is retained
+as a separate attachment. This normalization applies only to `TriageDefect`
+exceptions; other failures keep their ordinary traces.
+
+```bash
+DEMO_DISABLE_FLAKES=1 .venv/bin/python3 -m pytest -k http_triage --alluredir allure-results
+```
 
 ## What you need
 

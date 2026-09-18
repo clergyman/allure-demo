@@ -1,5 +1,4 @@
 import allure
-import pytest
 
 
 @allure.epic("Demo Shop")
@@ -15,9 +14,7 @@ def test_search_finds_matching_product(catalog_client):
 
     with allure.step("Verify the matching product is returned"):
         assert response["status_code"] == 200
-        pytest.fail(
-            "Demo stable failure: catalog search ranking returned stale product data."
-        )
+        assert response["json"]["items"][0]["id"] == "product-1"
 
 
 @allure.epic("Demo Shop")

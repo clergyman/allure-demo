@@ -269,25 +269,22 @@ def test_orders_status_payload_does_not_expose_user_data(orders_client):
         assert "email" not in response["json"]
 
 
-def test_orders_queue_projection_failure_demo(orders_client):
+def test_orders_queue_projection_accepts_order(orders_client):
     orders_metadata("Order queue projection drift", "critical")
     verify_order_created(orders_client, quantity=1)
-    pytest.fail("Demo stable failure: order queue projection lagged behind checkout.")
 
 
-def test_orders_payment_reservation_failure_demo(orders_client):
+def test_orders_payment_reservation_accepts_two_items(orders_client):
     orders_metadata("Payment reservation drift", "critical")
     verify_order_created(orders_client, quantity=2)
-    pytest.fail("Demo stable failure: payment reservation total was calculated late.")
 
 
-def test_orders_fulfillment_adapter_broken_demo(orders_client):
+def test_orders_fulfillment_projection_is_available(orders_client):
     orders_metadata("Fulfillment adapter availability", "normal")
     verify_order_status_found(orders_client)
-    raise RuntimeError("Demo broken test: fulfillment adapter contract fixture was missing.")
 
 
-def test_orders_tax_calculation_failure_demo(orders_client):
+def test_orders_tax_calculation_includes_two_item_tax(orders_client):
     orders_metadata("Tax calculation", "critical")
     with allure.step("Create an order that should include tax details"):
         response = orders_client.create_order("user-1", "product-1", 2)
@@ -295,7 +292,7 @@ def test_orders_tax_calculation_failure_demo(orders_client):
         assert response["json"]["tax_total"] == "9.28"
 
 
-def test_orders_shipping_sla_failure_demo(orders_client):
+def test_orders_shipping_sla_is_available(orders_client):
     orders_metadata("Shipping SLA", "normal")
     with allure.step("Create an order for checkout handoff"):
         response = orders_client.create_order("user-1", "product-1", 1)

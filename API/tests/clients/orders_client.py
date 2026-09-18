@@ -28,6 +28,8 @@ class OrdersClient:
                 "product_id": product_id,
                 "quantity": quantity,
                 "status": "created",
+                "tax_total": f"{4.64 * quantity:.2f}",
+                "shipping_sla": "2 business days",
             },
         }
         log_api_call(

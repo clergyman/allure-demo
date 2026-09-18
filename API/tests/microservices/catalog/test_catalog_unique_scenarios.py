@@ -258,25 +258,22 @@ def test_catalog_search_empty_result_has_items_collection(catalog_client):
         assert response["json"]["items"] == []
 
 
-def test_catalog_backpack_inventory_projection_failure_demo(catalog_client):
+def test_catalog_backpack_inventory_projection_is_current(catalog_client):
     catalog_metadata("Inventory projection drift", "critical")
     verify_product(catalog_client, "product-1", "Demo Backpack", 12)
-    pytest.fail("Demo stable failure: inventory projection still shows yesterday's stock.")
 
 
-def test_catalog_search_ranking_failure_demo(catalog_client):
+def test_catalog_search_ranking_returns_backpack(catalog_client):
     catalog_metadata("Search ranking drift", "critical")
     verify_search_count(catalog_client, "backpack", 1)
-    pytest.fail("Demo stable failure: search ranking promoted a stale catalog document.")
 
 
-def test_catalog_price_index_broken_demo(catalog_client):
+def test_catalog_product_projection_is_available(catalog_client):
     catalog_metadata("Price index availability", "normal")
     verify_product(catalog_client, "product-1", "Demo Backpack", 12)
-    raise RuntimeError("Demo broken test: price index response was missing from fixture.")
 
 
-def test_catalog_supplier_feed_contract_failure_demo(catalog_client):
+def test_catalog_supplier_feed_exposes_restock_date(catalog_client):
     catalog_metadata("Supplier feed contract", "critical")
     with allure.step("Read bottle details from catalog projection"):
         response = catalog_client.get_product("product-2")

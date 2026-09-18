@@ -1,6 +1,7 @@
 import allure
 
 from http_demo import expect_status, metadata
+from triage_contracts import european_price
 
 
 def test_category_navigation(http_api):
@@ -27,11 +28,7 @@ def test_availability_after_category_discovery(http_api):
 
 
 def test_regional_price_uses_euros(http_api):
-    metadata('Catalog', 'Regional pricing', 'catalog-service')
-    response = http_api.request('GET', '/catalog/products/product-1/price?region=EU')
-    expect_status(response, 200)
-    with allure.step('Verify EU storefront currency'):
-        assert response['json']['currency'] == 'EUR', 'Price index returned US currency for EU region'
+    european_price(http_api, 'EU', 'web', 'buyer')
 
 
 def test_recommendations_survive_index_outage(http_api):

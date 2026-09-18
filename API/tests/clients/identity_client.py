@@ -8,6 +8,7 @@ class IdentityClient:
                 "status_code": 200,
                 "json": {
                     "token": "demo-token",
+                    "expires_in": 3600,
                     "user": {"id": "user-1", "email": email},
                 },
             }

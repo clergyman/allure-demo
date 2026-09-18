@@ -5,7 +5,7 @@ class CatalogClient:
     def get_product(self, product_id: str) -> dict:
         products = {
             "product-1": {"id": "product-1", "name": "Demo Backpack", "stock": 12},
-            "product-2": {"id": "product-2", "name": "Demo Bottle", "stock": 0},
+            "product-2": {"id": "product-2", "name": "Demo Bottle", "stock": 0, "restock_date": "2026-10-01"},
         }
 
         product = products.get(product_id)

@@ -237,27 +237,26 @@ def test_identity_failed_payload_does_not_expose_token(identity_client):
         assert "token" not in response["json"]
 
 
-def test_identity_session_cache_failure_demo(identity_client):
+def test_identity_session_cache_accepts_known_buyer(identity_client):
     identity_metadata("Session cache drift", "critical")
     verify_login_success(identity_client)
-    pytest.fail("Demo stable failure: session cache returned an outdated account flag.")
 
 
-def test_identity_audit_sink_broken_demo(identity_client):
+def test_identity_audit_login_rejects_unknown_buyer(identity_client):
     identity_metadata("Audit sink availability", "normal")
     verify_login_rejected(identity_client, "unknown@example.com", "correct-password")
-    raise RuntimeError("Demo broken test: identity audit sink was unavailable.")
 
 
-def test_identity_locked_account_policy_failure_demo(identity_client):
+def test_identity_locked_account_policy_rejects_login(identity_client):
     identity_metadata("Locked account policy", "critical")
     with allure.step("Submit login request for a locked buyer"):
         response = identity_client.login("locked@example.com", "correct-password")
-    with allure.step("Verify locked account returns a policy-specific error"):
-        assert response["json"]["error"] == "Account locked"
+    with allure.step("Verify locked account is rejected without exposing its state"):
+        assert response["status_code"] == 401
+        assert response["json"]["error"] == "Invalid credentials"
 
 
-def test_identity_token_claim_contract_failure_demo(identity_client):
+def test_identity_token_claim_contract_includes_expiry(identity_client):
     identity_metadata("Token claims contract", "critical")
     with allure.step("Login as known buyer"):
         response = identity_client.login("buyer@example.com", "correct-password")
