@@ -27,7 +27,7 @@ jobs:
       ALLURE_RESULTS: allure-results
       ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
       ALLURE_USERNAME: ${{ github.event.inputs.ALLURE_USERNAME }}
-      DEMO_DISABLE_FLAKES: 1
+      DEMO_DISABLE_FLAKES: "0"
     steps:
       - uses: actions/checkout@v4
 
