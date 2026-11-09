@@ -94,7 +94,7 @@ test('password retry recovers after a typo', async ({ page, users }) => {
   });
 
   await allure.step('Confirm retry success', async () => {
-    maybeFlake(0.2, 'password retry confirmation after a corrected typo');
+    maybeFlake(0.25, 'password retry confirmation after a corrected typo');
     await expect(page.getByRole('status')).toHaveText('Welcome back');
     await attachScreenshot('password-retry-success', await page.screenshot());
   });

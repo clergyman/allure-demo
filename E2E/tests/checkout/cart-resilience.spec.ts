@@ -55,7 +55,7 @@ test('checkout handoff preserves cart status after stock check', async ({ page }
 
   await allure.step('Simulate delayed stock check', async () => {
     await page.waitForTimeout(100);
-    maybeFlake(0.35, 'checkout handoff after delayed stock check');
+    maybeFlake(0.25, 'checkout handoff after delayed stock check');
   });
 
   await allure.step('Verify checkout can continue with the cart item', async () => {
