@@ -25,7 +25,7 @@ export function annotateScenario({
     await allure.layer('e2e');
     await allure.severity(severity);
     if (jira) {
-      await allure.label('Jira', jira);
+      await allure.label('jira', jira);
     }
 
     void smoke;
